@@ -84,7 +84,7 @@ class Customer
         }, 0);
     }
     /**
-     * Total facture payer ou non payer
+     * Total facture (payer ou non payer)
      * @Groups({"customers_read"})
      *
      * @return float
