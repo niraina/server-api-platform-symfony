@@ -15,6 +15,8 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 /**
  * @ORM\Entity(repositoryClass=CustomerRepository::class)
  * @ApiResource(
+ * collectionOperations={"GET", "POST"},
+ * itemOperations={"GET", "PUT", "DELETE"},
  * normalizationContext={
  *  "groups"={"customers_read"}
  * }
@@ -59,6 +61,7 @@ class Customer
     /**
      * @ORM\OneToMany(targetEntity=Invoice::class, mappedBy="customer")
      * @Groups({"customers_read"})
+     * @ApiSubresource
      */
     private $invoices;
 
