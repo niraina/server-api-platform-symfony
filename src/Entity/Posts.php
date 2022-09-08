@@ -7,7 +7,7 @@ use App\Repository\PostsRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource()
+ * 
  * @ORM\Entity(repositoryClass=PostsRepository::class)
  */
 class Posts

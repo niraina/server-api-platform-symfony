@@ -8,7 +8,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * @ORM\Entity(repositoryClass=ArticlesRepository::class)
- * @ApiResource
+ * 
  */
 class Articles
 {
