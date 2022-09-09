@@ -16,7 +16,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
- * @ApiResource
+ * @ApiResource(
+ * normalizationContext={"groups"={"users_read"}}
+ * )
  * @UniqueEntity("email", message="Cette adresse email est deja utiliser")
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -25,13 +27,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"customers_read", "invoices_read", "invoices_subresource"})
+     * @Groups({"customers_read", "invoices_read", "invoices_subresource", "users_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups({"customers_read", "invoices_read", "invoices_subresource"})
+     * @Groups({"customers_read", "invoices_read", "invoices_subresource", "users_read"})
      * @Assert\NotBlank(message="L'email est obligatoire")
      * @Assert\Email(message="Entrer un email valide")
      */
@@ -51,7 +53,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"customers_read", "invoices_read", "invoices_subresource"})
+     * @Groups({"customers_read", "invoices_read", "invoices_subresource", "users_read"})
      * @Assert\NotBlank(message="Le prénom du customer est obligatoire")
      * @Assert\Length(min=3, minMessage="Le prénom doit faire entre 3 et 255 caratère", max=255 , maxMessage="Le prénom doit faire 255 caratère max")
      */
@@ -59,7 +61,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"customers_read", "invoices_read", "invoices_subresource"})
+     * @Groups({"customers_read", "invoices_read", "invoices_subresource", "users_read"})
      * @Assert\NotBlank(message="Le nom du customer est obligatoire")
      * @Assert\Length(min=3, minMessage="Le nom doit faire entre 3 et 255 caratère", max=255 , maxMessage="Le nom doit faire 255 caratère max")
      */
