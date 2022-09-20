@@ -34,7 +34,7 @@ class CustomerUserSubscriber implements EventSubscriberInterface{
         if($cutsomer instanceof Customer && $method === "POST"){
             //choper l'utilisateur actuellement connecté
             $user = $this->security->getUser();
-            //Assigner l'utilisateur au customer q'on est en train de créer
+            //Assigner l'utilisateur connecter au customer q'on est en train de créer
             $cutsomer->setUser($user);
         }
 
