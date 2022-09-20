@@ -12,10 +12,25 @@ import './styles/app.css';
 
 // start the Stimulus application
 import './bootstrap';
-console.log("hello word!!!!");
+import Navbar from './components/Navbar';
+import HomePage from './pages/HomePage';
+import { HashRouter, Switch, Route } from "react-router-dom";
+import CustomerPage from './pages/CustomerPage';
 
 const App = () => {
-    return <h1>Bonjour a tous !</h1>
+    return (
+    <HashRouter>
+        <Navbar />
+        <main className="container pt-5">
+            <Switch>
+                <Route path="/customer" component={CustomerPage}/>
+                <Route path="/" component={HomePage} />
+            </Switch>
+        </main>
+    </HashRouter>
+    )
+
+
 }
 
 const rootElement = document.querySelector('#app');
