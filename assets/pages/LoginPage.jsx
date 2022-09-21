@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
+import AuthContext from '../contexts/AuthContext';
 import AuthAPI from '../services/authAPI';
 
-const LoginPage = (props) => {
+const LoginPage = ({ history}) => {
+
+    const {setIsAuthenticated} = useContext(AuthContext);
+
     const [credentials, setCredentials] = useState({
         username: "",
         password: ""
@@ -20,7 +24,9 @@ const LoginPage = (props) => {
 
         try {
             await AuthAPI.authenticate(credentials);
-            setError("")
+            setError("");
+            setIsAuthenticated(true);
+            history.replace("/customers");
         } catch (error) {
             setError("Aucun compte trouver sur cette adresse ou bien l'information n'est pas correct")
         }
