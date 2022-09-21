@@ -18,6 +18,7 @@ import { HashRouter, Switch, Route } from "react-router-dom";
 import CustomerPage from './pages/CustomerPage';
 import CustomerPageWithPagination from './pages/CustomerPageWithPagination';
 import InvoicesPage from './pages/InvoicesPage';
+import LoginPage from './pages/LoginPage';
 
 const App = () => {
     return (
@@ -25,6 +26,7 @@ const App = () => {
         <Navbar />
         <main className="container pt-5">
             <Switch>
+                <Route path="/login" component={LoginPage}/>
                 <Route path="/invoices" component={InvoicesPage}/>
                 <Route path="/customer" component={CustomerPage}/>
                 <Route path="/" component={HomePage} />
