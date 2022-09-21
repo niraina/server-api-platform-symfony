@@ -1,47 +1,99 @@
 import React, { useEffect, useState } from 'react';
-import axios from "axios";
 import Pagination from '../components/Pagination';
+import CustomersAPI from '../services/customersAPI';
+
 const CustomerPage = (props) => {
 
     const [customers, setCustomers] = useState([]);
-
     const [currentPage, setCurrentPage] = useState(1);
+    const [search, setSearch] = useState('');
 
-    useEffect(() => {
-        axios.get("http://localhost:8000/api/customers")
-        .then(response => response.data['hydra:member'])
-        .then(data => setCustomers(data))
-        .catch(error => console.log(error.response));
-    }, []);
+    //permet de recuperer les customers
+    const fecthCustomers = async () => {
 
-    const handleDelete = (id) => {
-        console.log(id);
+        try {
+            const data = await CustomersAPI.findAll()
+            setCustomers(data)
+        } catch (error) {
+            console.log(error.response)
+        }
+    }
+    //Au chargement du composant, on va cherchers les customers
+    useEffect(() => { 
+        fecthCustomers();
+    }, [])
+
+    // Autr efaçon d'afficher
+    // useEffect(() => {
+    //     CustomersAPI.findAll()
+    //     .then(data => setCustomers(data))
+    //     .catch(error => console.log(error.response));
+        
+    // }, []);
+
+    //gestion du suppression d'un customer
+    const handleDelete = async (id) => {
 
         const originalCustomers = [...customers];
-
-        //1. Approche optimiste
         setCustomers(customers.filter(customer => customer.id !== id));
-        //2. Approche pessimiste
 
-        axios.delete("http://localhost:8000/api/customers/" + id)
-        .then(response => console.log("ok"))
-        .catch(error => {
+        try {
+            await  CustomersAPI.delete(id)
+        }catch(error) {
             setCustomers(originalCustomers);
             console.log(error.response)
-        });
+        }
+        // Autre façon de supprimer (supprimer le async sur le handleDtelete)
+        // CustomersAPI.delete(id)
+        //     .then(response => console.log("ok"))
+        //     .catch(error => {
+        //         setCustomers(originalCustomers);
+        //         console.log(error.response)
+        //     });
+        
     }
 
+    //gestion du changement de page
     const handlePageChange = (page) => {
         setCurrentPage(page);
     }
 
+    // gestion de la recherche
+    const handleSearch = ({currentTarget}) => {
+        setSearch(currentTarget.value);
+        setCurrentPage(1);
+    }
+
     const itemsPerPage = 10;
 
-    const paginatedCustomers = Pagination.getData(customers, currentPage, itemsPerPage);
+    //filtrage des customers en fonction de la rechrche
+    const filteredCustomers = customers.filter(
+        c => 
+            c.firstName.toLowerCase().includes(search.toLowerCase()) ||
+            c.lastName.toLowerCase().includes(search.toLowerCase()) ||
+            c.email.toLowerCase().includes(search.toLowerCase()) ||
+            (c.company && c.company.toLowerCase().includes(search.toLowerCase())) 
+        )
 
+    //pagination des données
+    const paginatedCustomers = Pagination.getData(
+        filteredCustomers, 
+        currentPage, 
+        itemsPerPage
+        );
+    
     return ( 
     <>
         <h1>Liste des clients</h1>
+        <div className="form-group">
+          <input 
+                onChange={handleSearch}
+                value={search}
+                type="text" 
+                className="form-control" 
+                placeholder="Rechercher..." 
+            />
+        </div>
         <table className="table table-hover">
             <thead>
                 <tr>
@@ -82,7 +134,12 @@ const CustomerPage = (props) => {
                 )}
             </tbody>
         </table>
-        <Pagination currentPage={currentPage} itemsPerPage={itemsPerPage} length={customers.length} onPageChanged={handlePageChange}/>
+        {itemsPerPage < filteredCustomers.length && <Pagination 
+            currentPage={currentPage} 
+            itemsPerPage={itemsPerPage} 
+            length={filteredCustomers.length} 
+            onPageChanged={handlePageChange}
+        />}
     </>
     );
 }
