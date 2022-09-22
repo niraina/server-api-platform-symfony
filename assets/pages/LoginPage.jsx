@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import Field from '../components/forms/Field';
 import AuthContext from '../contexts/AuthContext';
 import AuthAPI from '../services/authAPI';
 
@@ -36,30 +37,22 @@ const LoginPage = ({ history}) => {
         <>
             <h1>Connexion à l'application</h1>
             <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label htmlFor="_username">Adresse email</label>
-                    <input 
-                        value={credentials.username}
-                        onChange={handleChange}
-                        type="email" 
-                        id="username" 
-                        name="username" 
-                        placeholder='Adresse e-mail' 
-                        className={"form-control" + (error && " is-invalid")} 
-                    />
-                    {error && <p className="invalid-feedback">{error}</p>}
-                </div>
-                <div className="form-group">
-                    <label htmlFor="_password">Mots de passe</label>
-                    <input
-                        value={credentials.password}
-                        onChange={handleChange}
-                        type="password" 
-                        id="password" 
-                        className="form-control" 
-                        placeholder='Mots de passe' 
-                        name="password" />
-                </div>
+                <Field
+                    label="Adresse e-mail"
+                    name="username"
+                    value={credentials.username}
+                    onChange={handleChange}
+                    placeholder="Adresse email de connexion"
+                    error={error}
+                />
+                <Field 
+                    name="password"
+                    label="Mot de passe"
+                    value={credentials.password}
+                    onChange={handleChange}
+                    type="password"
+                    error=""
+                />
                 <div className="form-group mt-3">
                     <button type="submit" className="btn btn-success">Se connecter !</button>
                 </div>
