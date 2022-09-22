@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Field from '../components/forms/Field';
-import axios from "axios";
+import CustomersAPI from '../services/customersAPI';
 
-const CreateCustomer = props => {
-    const { id } = props.match.params;
+
+const CreateCustomer = ({match, history}) => {
+    const { id } = match.params;
 
     const [customer, setCustomer] = useState({
         lastName: "",
@@ -22,19 +23,21 @@ const CreateCustomer = props => {
 
     const [editing, setEditing] = useState(false);
 
+    // recuperation du customer apr id
     const fetchCustomer = async id => {
         try {
-            const data = await axios
-                .get("http://localhost:8000/api/customers/" + id)
-                .then(response => response.data);
+            const {firstName, lastName, email, company} = await CustomersAPI.find(id);
             
-            const {firstName, lastName, email, company} = data;
             setCustomer({firstName, lastName, email, company});
         } catch (error) {
             console.log(error.response);
+            // TODO : Notifiaction d'une erreur
+
+            history.replace('/customers');
         }
     }
 
+    //chargement du customer en fonction des composent
     useEffect( () => {
         if(id !=="new") {
             setEditing(true)
@@ -52,20 +55,26 @@ const CreateCustomer = props => {
 
         try {
             if(editing) {
-                const response = await axios.put("http://localhost:8000/api/customers/" + id, customer)
-                console.log(response.data);
+                await CustomersAPI.update(id, customer)
+                // TODO : flash de notification
             }else {
-                const response = await axios.post("http://localhost:8000/api/customers", customer)
+                await CustomersAPI.create(customer);
                 // console.log(response.data);
-                setErrors({});
+
+                // TODO : flash de notification
+                history.replace("/customers");
             }
-        } catch (error) {
-            if(error.response.data.violations) {
+            setErrors({});
+        } catch ({response}) {
+            const {violations} = response.data;
+            if(violations) {
                 const apiErrors = {};
-                error.response.data.violations.forEach(violation => {
-                    apiErrors[violation.propertyPath] = violation.message;
+                violations.forEach(({propertyPath, message}) => {
+                    apiErrors[propertyPath] = message;
                 })
                 setErrors(apiErrors);
+
+                // TODO : flash de notification d'erreurs
             }
         }
 

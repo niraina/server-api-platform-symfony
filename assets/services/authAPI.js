@@ -36,7 +36,8 @@ function setup() {
     //2 .si le token est encore valide
     if(token) {
         const {exp: expiration} = jwtDecode(token)
-        if(expiration * 1000 > new Date().getTime() / 1000 ){
+        console.log(expiration);
+        if(expiration * 1000 > new Date().getTime()){
             //axios.defaults.headers["Authorization"] = "Bearer " + token;
             setAxiosToken(token);
         }
@@ -51,7 +52,7 @@ function isAuthenticated() {
     //2 .si le token est encore valide
     if(token) {
         const {exp: expiration} = jwtDecode(token)
-        if(expiration * 1000 > new Date().getTime() / 1000 ){
+        if(expiration * 1000 > new Date().getTime() ){
             return true
         }
         return false;
