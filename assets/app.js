@@ -21,19 +21,9 @@ import InvoicesPage from './pages/InvoicesPage';
 import LoginPage from './pages/LoginPage';
 import AuthAPI from './services/authAPI';
 import AuthContext from './contexts/AuthContext';
+import PrivateRoute from './components/PrivateRoute';
 
 AuthAPI.setup();
-
-const PrivateRoute = ({path, component}) => {
-
-    const {isAuthenticated} = useContext(AuthContext);
-
-    return isAuthenticated ? (
-        <Route path={path} component={component} />
-        ) : (
-        <Redirect to="/login" />
-        );
-}
 
 const App = () => {
 
@@ -42,13 +32,16 @@ const App = () => {
     
     const NavBarWithRouter = withRouter(Navbar);
 
-    const contextValue = {
-        isAuthenticated,
-        setIsAuthenticated
-    }
+    // const contextValue = {
+    //     isAuthenticated,
+    //     setIsAuthenticated
+    // }
 
     return (
-        <AuthContext.Provider value={contextValue}>
+        <AuthContext.Provider value={{
+            isAuthenticated,
+            setIsAuthenticated
+        }}>
             <HashRouter>
                 <NavBarWithRouter />
                 <main className="container pt-5">
