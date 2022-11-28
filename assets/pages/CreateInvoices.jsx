@@ -5,7 +5,7 @@ import Select from '../components/forms/Select';
 import CustomersAPI from '../services/customersAPI';
 import axios from "axios";
 
-const CreateInvoices = (props) => {
+const CreateInvoices = ({history}) => {
 
     const [invoice, setInvoice] = useState({
         amout: "",
@@ -42,8 +42,10 @@ const CreateInvoices = (props) => {
     const handleSubmit = async event => {
         event.preventDefault();
         try {
-            const response = await axios.post("http://localhost:8000/api/invoices", invoice)
-            console.log(response);
+            const response = await axios.post("http://localhost:8000/api/invoices", 
+            {...invoice, customer: `/api/customers/${invoice.customer}`})
+            //to do flash notif success
+            history.replace("/invoices")
         } catch (error) {
             console.log(error.response);
         }
@@ -81,7 +83,7 @@ const CreateInvoices = (props) => {
                 error={errors.status}
                 onChange={handleChange}
             >
-                <option value="SEND">Envoyée</option>
+                <option value="SENT">Envoyée</option>
                 <option value="PAID">Payée</option>  
                 <option value="CANCELLED">Annulée</option>
             </Select>
